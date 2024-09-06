@@ -4,16 +4,9 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "../ui/button";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../ui/form";
-import { Input } from "../ui/input";
+import { Form } from "../ui/form";
+import CustomFormField from "./CustomFormField";
+import { FormFieldType } from "@/lib/types";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -45,24 +38,32 @@ export default function PatientForm() {
           </p>
         </section>
 
-        <FormField
+        <CustomFormField
           control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
+          fieldType={FormFieldType.INPUT}
+          name="name"
+          label="Full Name"
+          placeholder="John Doe"
+          iconSrc="/assets/icons/user.svg"
+          iconSrcAlt="user icon"
+        />
+        
+        <CustomFormField
+          control={form.control}
+          fieldType={FormFieldType.INPUT}
+          name="email"
+          label="Email"
+          placeholder="JohnDoe@test.com"
+          iconSrc="/assets/icons/email.svg"
+          iconSrcAlt="email icon"
+        />
 
-              <FormControl>
-                <Input placeholder="martin" {...field} />
-              </FormControl>
-
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
-
-              <FormMessage />
-            </FormItem>
-          )}
+        <CustomFormField
+          control={form.control}
+          fieldType={FormFieldType.PHONE_INPUT}
+          name="phone"
+          label="Phone Number"
+          placeholder="(555) 555 5555"
         />
 
         <Button type="submit">Submit</Button>
