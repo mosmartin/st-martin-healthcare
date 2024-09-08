@@ -1,29 +1,40 @@
 "use client";
 
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Button } from "../ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "../ui/form";
 import CustomFormField from "./CustomFormField";
-import { FormFieldType } from "@/lib/types";
-
-const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-});
+import { FormFieldType, UserRegFormSchema } from "@/lib/types";
+import SubmitButton from "../SubmitButton";
 
 export default function PatientForm() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const [isLoading, setIsLoading] = useState(false);
+
+  const form = useForm<z.infer<typeof UserRegFormSchema>>({
+    resolver: zodResolver(UserRegFormSchema),
     defaultValues: {
-      username: "",
+      fullname: "",
+      email: "",
+      phone: "",
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit({
+    fullname,
+    email,
+    phone,
+  }: z.infer<typeof UserRegFormSchema>) {
+    setIsLoading(true);
+
+    try {
+      console.log({ fullname, email, phone });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -47,7 +58,7 @@ export default function PatientForm() {
           iconSrc="/assets/icons/user.svg"
           iconSrcAlt="user icon"
         />
-        
+
         <CustomFormField
           control={form.control}
           fieldType={FormFieldType.INPUT}
@@ -66,7 +77,7 @@ export default function PatientForm() {
           placeholder="(555) 555 5555"
         />
 
-        <Button type="submit">Submit</Button>
+        <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
       </form>
     </Form>
   );
